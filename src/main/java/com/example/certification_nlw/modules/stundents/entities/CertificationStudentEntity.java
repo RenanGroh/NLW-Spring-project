@@ -1,7 +1,10 @@
 package com.example.certification_nlw.modules.stundents.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "certifications")
+@Builder
 public class CertificationStudentEntity {
 
     @Id
@@ -26,16 +30,17 @@ public class CertificationStudentEntity {
     @Column(length = 10)
     private int grade;
 
-    @JoinColumn(name = "student_id")
+    @Column(name = "student_id")
     private UUID stundentiD;
 
     @ManyToOne
     @JoinColumn(name = "student_id", insertable = false, updatable = false)
     private StudentEntity studentEntity;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "answer_certification_id", insertable = false, updatable = false)
-    List<AnwsersCertificationsEntity> anwsersCertificationsEntityList;
+    @JsonManagedReference
+    List<AnwsersCertificationsEntity> anwsersCertificationsEntity;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
